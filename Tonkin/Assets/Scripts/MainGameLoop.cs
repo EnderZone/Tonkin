@@ -18,6 +18,7 @@ public class MainGameLoop : MonoBehaviour {
     private void Start()
     {
         GenerateInitialBoard();
+        GenerateBoardPositions();
     }
 
     private void Update()
@@ -74,5 +75,10 @@ public class MainGameLoop : MonoBehaviour {
     {
         float direction = x < 10 ? 1.0f : -1.0f;
         p.transform.position = (Vector3.right * x_offset * ((x % 10) - 9)) + (Vector3.forward * z_offset * direction) + boardOffset;
+    }
+
+    private void GenerateBoardPositions()
+    {
+
     }
 }

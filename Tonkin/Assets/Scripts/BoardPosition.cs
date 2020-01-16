@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BoardPosition : MonoBehaviour {
-    public GamePiece playerPiece;
+    private GamePiece playerPiece;
+
+    public GameObject optionPrefab;
+
+    public Vector3 position;
+    public ISet<BoardPosition> neighbours;
 
     // Start is called before the first frame update
     void Start()
     {
         playerPiece = null;
+        neighbours = new HashSet<BoardPosition>();
     }
 
     // Update is called once per frame
@@ -20,5 +26,20 @@ public class BoardPosition : MonoBehaviour {
     public void setPlayerPiece(GamePiece p)
     {
         playerPiece = p;
+    }
+
+    public GamePiece getPlayerPiece()
+    {
+        return playerPiece;
+    }
+
+    public void addNeighbour(BoardPosition bp)
+    {
+        neighbours.Add(bp);
+    }
+
+    public ISet<BoardPosition> getNeighbours()
+    {
+        return neighbours;
     }
 }
