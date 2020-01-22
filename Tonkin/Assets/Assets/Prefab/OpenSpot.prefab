@@ -7,16 +7,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: -8102574397228420113, guid: acc5145af4dfffb4ca8313f5a67d2512,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 490883437183023329, guid: acc5145af4dfffb4ca8313f5a67d2512,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: c2d63fac1581dcd49aa1c972e425c38e, type: 2}
     - target: {fileID: 490883437183023329, guid: acc5145af4dfffb4ca8313f5a67d2512,
         type: 3}
       propertyPath: m_CastShadows
@@ -27,6 +17,11 @@ PrefabInstance:
       propertyPath: m_ReceiveShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 490883437183023329, guid: acc5145af4dfffb4ca8313f5a67d2512,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c2d63fac1581dcd49aa1c972e425c38e, type: 2}
     - target: {fileID: 490883437183023331, guid: acc5145af4dfffb4ca8313f5a67d2512,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -89,13 +84,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 490883437183023340, guid: acc5145af4dfffb4ca8313f5a67d2512,
         type: 3}
-      propertyPath: m_IsActive
-      value: 1
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 490883437183023340, guid: acc5145af4dfffb4ca8313f5a67d2512,
         type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
+      propertyPath: m_TagString
+      value: OpenSpot
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: acc5145af4dfffb4ca8313f5a67d2512, type: 3}

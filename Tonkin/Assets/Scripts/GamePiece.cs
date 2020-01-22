@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GamePiece : MonoBehaviour {
     public float selected_offset = 0.4f;
+    public int board_position;
 
     public bool isSelected;
 
@@ -11,6 +12,7 @@ public class GamePiece : MonoBehaviour {
     // Start is called before the first frame update
     void Start()
     {
+        board_position = -1;
         isSelected = false;
     }
 

@@ -57,6 +57,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\BoardPosition.cs" />
      <Compile Include="Assets\Scripts\GamePiece.cs" />
+     <Compile Include="Assets\Scripts\GameSet.cs" />
      <Compile Include="Assets\Scripts\MainGameLoop.cs" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>E:/University/COMP 4501/Assignments/Tonkin/Tonkin/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
