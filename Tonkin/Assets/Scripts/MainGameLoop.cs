@@ -12,7 +12,12 @@ public class MainGameLoop : MonoBehaviour {
     public GameObject playerTwoPrefab;
     public GameObject openSpotPrefab;
 
+    private int blue_turn = 0;
+    private int red_turn = 0;
+
     private GamePiece selectedPiece = null;
+
+    public int turnOrder = 1;
 
     public Vector3 boardOffset = new Vector3(1.5f, 0.0f, 0.0f);
     public float x_offset = 0.75f;
@@ -27,9 +32,58 @@ public class MainGameLoop : MonoBehaviour {
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        int winner = checkWinner();
+        if (winner != -1)
         {
-            HandleMouseClickEvent();
+            displayWinner(winner);
+        }
+        else
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                HandleMouseClickEvent();
+            }
+            UpdateTextPrompts();
+        }
+    }
+
+    private void displayWinner(int winner)
+    {
+        Transform canvas = transform.GetChild(0);
+        UnityEngine.UI.Text blue_turn_text = canvas.GetChild(0).GetComponent<UnityEngine.UI.Text>();
+        UnityEngine.UI.Text red_turn_text = canvas.GetChild(1).GetComponent<UnityEngine.UI.Text>();
+        UnityEngine.UI.Text blue_win_text = canvas.GetChild(2).GetComponent<UnityEngine.UI.Text>();
+        UnityEngine.UI.Text red_win_text = canvas.GetChild(3).GetComponent<UnityEngine.UI.Text>();
+
+
+        blue_turn_text.text = "";
+        red_turn_text.text = "";
+
+        if (winner == 1)
+        {
+            blue_win_text.text = "Blue Player Wins";
+        }
+        else
+        {
+            red_win_text.text = "Red Player Wins";
+        }
+    }
+
+    private void UpdateTextPrompts()
+    {
+        Transform canvas = transform.GetChild(0);
+        UnityEngine.UI.Text blue_turn_text = canvas.GetChild(0).GetComponent<UnityEngine.UI.Text>();
+        UnityEngine.UI.Text red_turn_text = canvas.GetChild(1).GetComponent<UnityEngine.UI.Text>();
+
+        if (turnOrder == 1)
+        {
+            blue_turn_text.text = "Blue Player Turn";
+            red_turn_text.text = "";
+        }
+        else
+        {
+            blue_turn_text.text = "";
+            red_turn_text.text = "Red Player Turn";
         }
     }
 
@@ -43,17 +97,109 @@ public class MainGameLoop : MonoBehaviour {
             {
                 currentPiece = hit.transform.GetComponent<GamePiece>();
             }
+            else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 25.0f, LayerMask.GetMask("OpenSpot")))
+            {
+                moveSelectedPiece(hit.transform.GetComponent<GamePiece>().board_position);
+            }
         }
-        if (selectedPiece == null && currentPiece != null)
+
+        if (selectedPiece == null)
         {
-            selectedPiece = currentPiece;
-            selectedPiece.SelectPiece();
+            if (currentPiece != null && currentPiece.player == turnOrder)
+            {
+                selectedPiece = currentPiece;
+                selectedPiece.SelectPiece();
+                addPossiblePositions();
+            }
         }
         else if (selectedPiece == currentPiece)
         {
             selectedPiece.SelectPiece();
             selectedPiece = null;
+            removePossiblePositions();
         }
+    }
+
+    private void addPossiblePositions()
+    {
+        if (selectedPiece == null)
+            return;
+
+        if (selectedPiece.board_position == -1)
+        {
+            foreach (BoardPosition bp in positions)
+            {
+                if (bp.getPlayer() == 0)
+                {
+                    GameObject go = Instantiate(openSpotPrefab) as GameObject;
+                    go.transform.SetParent(transform);
+
+                    GamePiece p = go.GetComponent<GamePiece>();
+                    possiblePositions.Add(p);
+                    p.transform.position = bp.getTransformPosition();
+                    p.board_position = bp.id;
+
+                    possiblePositions.Add(p);
+                }
+            }
+        }
+        else
+        {
+            ISet<int> neighbours = positions[selectedPiece.board_position].getNeighbours();
+            foreach (int pos in neighbours)
+            {
+                if (positions[pos].getPlayer() == 0)
+                {
+                    GameObject go = Instantiate(openSpotPrefab) as GameObject;
+                    go.transform.SetParent(transform);
+
+                    GamePiece p = go.GetComponent<GamePiece>();
+                    possiblePositions.Add(p);
+                    p.transform.position = positions[pos].getTransformPosition();
+                    p.board_position = positions[pos].id;
+
+                    possiblePositions.Add(p);
+                }
+            }
+        }
+    }
+
+    private void removePossiblePositions()
+    {
+        foreach (GamePiece gp in possiblePositions)
+        {
+            Destroy(gp.gameObject);
+        }
+        possiblePositions.Clear();
+    }
+
+    private void moveSelectedPiece(int pos)
+    {
+        if (selectedPiece.board_position != -1)
+        {
+            positions[selectedPiece.board_position].setPlayer(0);
+        }
+
+        selectedPiece.board_position = pos;
+        selectedPiece.transform.position = positions[pos].getTransformPosition();
+        positions[pos].setPlayer(selectedPiece.player);
+
+        removePossiblePositions();
+        selectedPiece.isSelected = false;
+        selectedPiece = null;
+
+        turnOrder = (turnOrder == 1) ? 2 : 1;
+    }
+
+    private int checkWinner()
+    {
+        foreach (GameSet gs in winning_sets)
+        {
+            int winner = gs.checkWinner();
+            if (winner != -1)
+                return winner;
+        }
+        return -1;
     }
 
     private void GenerateInitialBoard()
@@ -72,6 +218,8 @@ public class MainGameLoop : MonoBehaviour {
         GamePiece p = go.GetComponent<GamePiece>();
         pieces[x] = p;
         SetInitialPiecePlacement(p, x);
+        p.board_position = -1;
+        p.player = (x < 10) ? 1 : 2;
     }
 
     private void SetInitialPiecePlacement(GamePiece p, int x)
@@ -123,7 +271,7 @@ public class MainGameLoop : MonoBehaviour {
         gs = new GameSet();
         gs.addToSet(positions[1]);
         gs.addToSet(positions[5]);
-        gs.addToSet(positions[12]);
+        gs.addToSet(positions[9]);
         winning_sets.Add(gs);
 
         // 7 - top left to bottom right short diagonal

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BoardPosition {
+    public int id;
     private int player;
     private Vector3 position;
 
@@ -39,6 +40,7 @@ public class BoardPosition {
     public void setPosition(int board_pos)
     {
         Vector3 new_pos;
+        id = board_pos;
         switch (board_pos)
         {
             case 0:
@@ -329,7 +331,7 @@ public class BoardPosition {
                 neighbours.Add(43);
                 break;
             case 38:
-                new_pos = new Vector3(-3.15f, 0.0f, -3.15f);
+                new_pos = new Vector3(-3.15f, 0.0f, 3.15f);
                 neighbours.Add(29);
                 neighbours.Add(30);
                 neighbours.Add(40);
